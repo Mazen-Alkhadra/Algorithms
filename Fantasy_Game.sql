@@ -44,7 +44,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `RealLeague` English , Spanish etc..
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `Real_League` (
-  `IdRealLeagueIdRealLeague` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `IdRealLeague` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `LeagueName` NVARCHAR(50) NOT NULL ,
   `LeaguePhoto` VARCHAR(200) NULL ,
   `NumberOfTeams` INT(5) UNSIGNED NOT NULL DEFAULT 20 ,
