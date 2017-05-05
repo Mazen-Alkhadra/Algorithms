@@ -44,7 +44,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `RealLeague` English , Spanish etc..
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `Real_League` (
-  `IdRealLeague` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `IdRealLeagueIdRealLeague` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `LeagueName` NVARCHAR(50) NOT NULL ,
   `LeaguePhoto` VARCHAR(200) NULL ,
   `NumberOfTeams` INT(5) UNSIGNED NOT NULL DEFAULT 20 ,
@@ -179,9 +179,9 @@ CREATE  TABLE IF NOT EXISTS `Real_Team` (
   `Home`     NVARCHAR(50) NOT NULL , -- Team's city 
   `ApiId` INT(10) UNSIGNED NULL,
   `TeamNameAbb` NVARCHAR(10) NOT NULL ,--  Team Name Abbreviation 
- PRIMARY KEY (`IdRealTeam`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+  PRIMARY KEY (`IdRealTeam`))
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `RealPlayer` 
@@ -190,9 +190,10 @@ CREATE  TABLE IF NOT EXISTS `Real_Player` (
   `IdRealPlayer` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `FirstName` NVARCHAR(50) NOT NULL ,
   `LastName` NVARCHAR(50) NOT NULL ,
+  `DisplayName` NVARCHAR(50) NULL , 
   `BirthDate` DATE NOT NULL ,
-  `Nationality` NVARCHAR(50) NOT NULL ,
-  `Photo` VARCHAR(200) NOT NULL ,
+  `Nationality` NVARCHAR(50) NULL ,
+  `Photo` VARCHAR(200) NULL DEFAULT NULL ,
   `ApiId` INT(10) UNSIGNED NULL,
    PRIMARY KEY (`IdRealPlayer`) )
    ENGINE = InnoDB
@@ -234,6 +235,37 @@ CREATE INDEX `INDX_Match_GameWeek` ON `Match` (`GameWeekId` ASC) ;
 CREATE INDEX `INDX_Match_RealTeam1` ON `Match` (`Team1Id` ASC) ;
 
 CREATE INDEX `INDX_Match_RealTeam2` ON `Match` (`Team2Id` ASC) ;
+-- -----------------------------------------------------
+-- Table `Real_Team_In_RealLeague`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `Real_Team_In_RealLeague` (
+  `RealTeamId` INT(10) UNSIGNED NOT NULL ,
+  `RealLeagueId` INT(10) UNSIGNED NOT NULL ,
+  `Rank` INT(10) UNSIGNED NULL ,
+  `Wins` INT(10) UNSIGNED NULL ,
+  `Ties` INT(10) UNSIGNED NULL ,
+  `Loses` INT(10) UNSIGNED NULL ,
+  `GoalsScored` INT(10) UNSIGNED NULL ,
+  `GoalsConceded` INT(10) UNSIGNED NULL ,
+  `TeamPoints` DOUBLE NULL ,
+  PRIMARY KEY (`RealLeagueId`, `RealTeamId`) ,
+  CONSTRAINT `FK_RealTeamInRealLeague_RealLeague`
+    FOREIGN KEY (`RealLeagueId` )
+    REFERENCES `Real_League` (`IdRealLeague` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `FK_RealTeamInRealLeague_RealTeam`
+    FOREIGN KEY (`RealTeamId` )
+    REFERENCES `Real_Team` (`IdRealTeam` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE INDEX `INDX_RealTeamInRealLeague_RealLeague` ON `Real_Team_In_RealLeague` (`RealLeagueId` ASC) ;
+
+CREATE INDEX `INDX_RealTeamInRealLeague_RealTeam` ON `Real_Team_In_RealLeague` (`RealTeamId` ASC) ;
+
 -- -----------------------------------------------------
 -- Table `Real_Team_In_Season`
 -- -----------------------------------------------------
