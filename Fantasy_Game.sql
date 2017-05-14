@@ -210,13 +210,15 @@ CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`match` (
   `IdMatch` INT(20) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `StartDate` DATETIME NOT NULL ,
   `ApiId` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  `Minutes` INT(10) UNSIGNED NOT NULL DEFAULT 90 , -- number of minutes played in the match
+  -- `Minutes` INT(10) UNSIGNED NOT NULL DEFAULT 90 , -- number of minutes played in the match
   `Team1Score` INT(2) UNSIGNED NULL DEFAULT NULL ,
   `Team2Score` INT(2) UNSIGNED NULL DEFAULT NULL ,
   `GameWeekId` INT(10) UNSIGNED NOT NULL ,
   `Team1Id` INT(10) UNSIGNED NOT NULL , -- Real Team 
   `Team2Id` INT(10) UNSIGNED NOT NULL , -- Real Team 
   `Place` NVARCHAR(100) NOT NULL , -- city or country the match will be played
+  `Team1Coach` NVARCHAR(50) NULL DEFAULT NULL ,
+  `Team2Coach` NVARCHAR(50) NULL DEFAULT NULL ,
   PRIMARY KEY (`IdMatch`) ,
   CONSTRAINT `FK_Match_GameWeek`
     FOREIGN KEY (`GameWeekId` )
@@ -278,7 +280,7 @@ CREATE INDEX `INDX_RealTeamInRealLeague_RealTeam` ON `Real_Team_In_RealLeague` (
 CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_team_in_season` (
   `RealTeamId` INT(10) UNSIGNED NOT NULL ,
   `SeasonId` INT(10) UNSIGNED NOT NULL ,
-  `TeamCoach` NVARCHAR(100) NULL DEFAULT NULL ,
+  -- `TeamCoach` NVARCHAR(100) NULL DEFAULT NULL ,
   `Rank` INT(10) UNSIGNED NOT NULL ,
   `Wins` INT(10) UNSIGNED NOT NULL ,
   `Ties` INT(10) UNSIGNED NOT NULL ,
@@ -347,7 +349,7 @@ CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_player_in_season` (
   `Number` VARCHAR(5) NOT NULL ,
   `Height` DOUBLE UNSIGNED NULL DEFAULT 0 ,
   `Weight` DOUBLE UNSIGNED NULL DEFAULT 0 ,
-  `Speed` DOUBLE UNSIGNED NULL DEFAULT  0 ,
+  `Speed` DOUBLE UNSIGNED NULL DEFAULT  NULL ,
   `Position` NVARCHAR(20) NOT NULL ,
   `GoalsScored` INT(11) NULL DEFAULT NULL ,
   `Assists` INT(11) NULL DEFAULT NULL ,
@@ -416,6 +418,17 @@ CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_player_in_match` (
   `MinutesPlayed` DOUBLE UNSIGNED NOT NULL DEFAULT 0 ,
   `PenaltiesSaved` INT(3) NULL DEFAULT 0 ,
   `PenaltiesMissed` INT(3) NOT NULL DEFAULT 0 ,
+  `OwnGoal` INT(3) NULL DEFAULT 0 ,
+  `YellowCards` INT(3) NULL DEFAULT 0 ,
+  `RedCards` INT(3) NULL DEFAULT 0 ,
+  `Offsides` INT(3) NULL DEFAULT 0 ,
+  `Corners` INT(3) NULL DEFAULT 0 ,
+  `Clears` INT(3) NULL DEFAULT 0 ,
+  `Tackles` INT(3) NULL DEFAULT 0 ,
+  `Fouls` INT(3) NULL DEFAULT 0 ,
+  `GameWinningGoal` INT(3) NULL DEFAULT 0 ,
+  `GameWinningAssist` INT(3) NULL DEFAULT 0 ,
+  `Shots` INT(3) NULL DEFAULT 0 ,
   `Rank` INT(10) UNSIGNED NULL DEFAULT NULL ,
   PRIMARY KEY (`RealPlayerId`, `MatchId`) ,
   CONSTRAINT `FK_RealPlayerInMatch_Match`
@@ -504,4 +517,34 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE INDEX `INDX_UserPlayer_User` ON `User_Player` (`UserTeamId` ASC) ;
 CREATE INDEX `INDX_UserPlayer_RealPlayer` ON `User_Player` (`RealPlayerId` ASC) ;
+
+-- -----------------------------------------------------
+-- Table `Injuries`
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`injury` (
+  `IdInjury` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `ApiId` INT(10) NOT NULL ,
+  `StartDate` DATETIME NULL DEFAULT NULL ,
+  `EndDate` DATETIME NULL DEFAULT NULL ,
+  `description` NVARCHAR(50) NULL DEFAULT NULL ,
+  `PlayerId` INT(10) UNSIGNED NOT NULL ,
+  `MatchId` INT(20) UNSIGNED NOT NULL ,
+  `TeamId` INT(10) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`IdInjury`) ,
+  CONSTRAINT `FK_Injury_Match`
+    FOREIGN KEY (`MatchId` )
+    REFERENCES `fantasy_soccer_game`.`match` (`IdMatch` ),
+  CONSTRAINT `FK_Injury_RealPlayer`
+    FOREIGN KEY (`PlayerId` )
+    REFERENCES `fantasy_soccer_game`.`real_player` (`IdRealPlayer` ),
+  CONSTRAINT `FK_Injury_RealTeam`
+    FOREIGN KEY (`TeamId` )
+    REFERENCES `fantasy_soccer_game`.`real_team` (`IdRealTeam` ),
+  INDEX `INDX_Injury_RealPlayer` (`PlayerId` ASC) ,
+  INDEX `INDX_Injury_RealTeam` (`TeamId` ASC) ,
+  INDEX `INDX_Injury_Match` (`MatchId` ASC)   
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
