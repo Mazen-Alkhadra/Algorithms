@@ -210,7 +210,6 @@ CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`match` (
   `IdMatch` INT(20) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `StartDate` DATETIME NOT NULL ,
   `ApiId` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  -- `Minutes` INT(10) UNSIGNED NOT NULL DEFAULT 90 , -- number of minutes played in the match
   `Team1Score` INT(2) UNSIGNED NULL DEFAULT NULL ,
   `Team2Score` INT(2) UNSIGNED NULL DEFAULT NULL ,
   `GameWeekId` INT(10) UNSIGNED NOT NULL ,
@@ -280,7 +279,6 @@ CREATE INDEX `INDX_RealTeamInRealLeague_RealTeam` ON `Real_Team_In_RealLeague` (
 CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_team_in_season` (
   `RealTeamId` INT(10) UNSIGNED NOT NULL ,
   `SeasonId` INT(10) UNSIGNED NOT NULL ,
-  -- `TeamCoach` NVARCHAR(100) NULL DEFAULT NULL ,
   `Rank` INT(10) UNSIGNED NOT NULL ,
   `Wins` INT(10) UNSIGNED NOT NULL ,
   `Ties` INT(10) UNSIGNED NOT NULL ,
@@ -312,6 +310,7 @@ CREATE INDEX `INDX_RealTeamInSeason_RealTeam` ON `Real_Team_In_Season` (`RealTea
 CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_team_in_match` (
   `RealTeamId` INT(10) UNSIGNED NOT NULL ,
   `MatchId` INT(20) UNSIGNED NOT NULL ,
+  `MinutesPlayed` double unsigned NOT NULL DEFAULT 90,-- number of minutes played in the match
   `YCards` INT(10) UNSIGNED NOT NULL DEFAULT 0 , -- number of yellow cards collected by the team in a Match
   `RedCards` INT(10) UNSIGNED NOT NULL DEFAULT 0 ,
   `Shots` INT(10) UNSIGNED NOT NULL DEFAULT 0 ,
@@ -524,10 +523,10 @@ CREATE INDEX `INDX_UserPlayer_RealPlayer` ON `User_Player` (`RealPlayerId` ASC) 
 
 CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`injury` (
   `IdInjury` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `ApiId` INT(10) NOT NULL ,
+  `ApiId` INT(10) UNSIGNED NOT NULL ,
   `StartDate` DATETIME NULL DEFAULT NULL ,
   `EndDate` DATETIME NULL DEFAULT NULL ,
-  `description` NVARCHAR(50) NULL DEFAULT NULL ,
+  `description` NVARCHAR(100) NULL DEFAULT NULL ,
   `PlayerId` INT(10) UNSIGNED NOT NULL ,
   `MatchId` INT(20) UNSIGNED NOT NULL ,
   `TeamId` INT(10) UNSIGNED NOT NULL ,
@@ -547,4 +546,3 @@ CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`injury` (
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
