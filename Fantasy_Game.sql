@@ -248,7 +248,6 @@ CREATE INDEX `INDX_Match_RealTeam2` ON `Match` (`Team2Id` ASC) ;
 CREATE  TABLE IF NOT EXISTS `fantasy_soccer_game`.`real_team_in_realleague` (
   `RealTeamId` INT(10) UNSIGNED NOT NULL ,
   `RealLeagueId` INT(10) UNSIGNED NOT NULL ,
-  `Rank` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `Wins` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `Ties` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `Losses` INT(10) UNSIGNED NULL DEFAULT NULL ,
